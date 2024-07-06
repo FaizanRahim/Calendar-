@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .calendar {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .month {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .weekdays {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .weekdays div {
+            width: calc(100% / 7);
+            text-align: center;
+            padding: 5px 0;
+            font-weight: bold;
+        }
+
+        .days {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .day {
+            width: calc(100% / 7);
+            text-align: center;
+            padding: 10px 0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .today {
+            background-color: #f0f0f0;
+        }
+
+        .btn {
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar"></div>
+
+    <script>
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        function generateCalendar(month, year) {
+            const calendar = document.querySelector('.calendar');
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const lastDayOfMonth = new Date(year, month, daysInMonth).getDay();
+
+            let html = `<div class="month">${months[month]} ${year}</div>`;
+            html += `<div class="weekdays">`;
+            const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            for (let day of weekdays) {
+                html += `<div>${day}</div>`;
+            }
+            html += `</div><div class="days">`;
+
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                html += `<div></div>`;
+            }
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                let className = '';
+                if (new Date(year, month, i).toDateString() === new Date().toDateString()) {
+                    className = 'today';
+                }
+                html += `<div class="day ${className}" onclick="alert('You clicked on ${months[month]} ${i}, ${year}')">${i}</div>`;
+            }
+
+            for (let i = lastDayOfMonth; i < 6; i++) {
+                html += `<div></div>`;
+            }
+
+            html += `</div>`;
+            calendar.innerHTML = html;
+        }
+
+        function prevMonth() {
+            currentMonth -= 1;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear -= 1;
+            }
+            generateCalendar(currentMonth, currentYear);
+        }
+
+        function nextMonth() {
+            currentMonth += 1;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear += 1;
+            }
+            generateCalendar(currentMonth, currentYear);
+        }
+
+        // Initial calendar generation
+        generateCalendar(currentMonth, currentYear);
+
+    </script>
+    <div>
+        <button class="btn" onclick="prevMonth()">Previous</button>
+        <button class="btn" onclick="nextMonth()">Next</button>
+    </div>
+</body>
+</html>
